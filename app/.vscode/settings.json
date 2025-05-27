@@ -1,0 +1,5 @@
+{
+  "livePreview.defaultPreviewPath": "/",
+  "livePreview.port": 8000,
+  "livePreview.serverKeepAliveAfterEmbed": true
+}
