@@ -41,7 +41,12 @@ RUN php artisan config:clear \
 # Donner les bons droits
 RUN chown -R www-data:www-data /var/www
 
-# Exposer le port Laravel
+# Donner les bons droits
+RUN mkdir -p bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+# Exposer le port
 EXPOSE 8000
 
 # Lancer le serveur Laravel
