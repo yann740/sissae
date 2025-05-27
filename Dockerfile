@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-# Installer les dépendances système
+# Installer les dépendances système et PHP nécessaires
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -11,35 +11,37 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     sqlite3 \
-    libsqlite3-dev
+    libsqlite3-dev \
+    libzip-dev \
+    && docker-php-ext-install pdo pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd zip
 
+# Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Installer les extensions PHP
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
-
-# Copier le projet
-COPY . /var/www
+# Définir le dossier de travail
 WORKDIR /var/www
 
 # Copier les fichiers du projet
 COPY . .
 
-COPY . .
-
-# Copier le fichier .env si tu l'as localement configuré
+# Copier le fichier .env si présent
 COPY .env /var/www/.env
 
+# Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Donner les droits corrects
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www/storage
+# Créer le fichier SQLite et donner les droits
+RUN touch database/database.sqlite \
+    && chmod -R 775 storage bootstrap/cache database/database.sqlite
 
 # Générer la clé d'application
-RUN php artisan key:generate
+RUN php artisan config:clear \
+    && php artisan key:generate
 
-# Port par défaut utilisé par Laravel
+# Donner les bons droits
+RUN chown -R www-data:www-data /var/www
+
+# Exposer le port Laravel
 EXPOSE 8000
 
 # Lancer le serveur Laravel
