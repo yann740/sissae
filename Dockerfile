@@ -11,29 +11,35 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     sqlite3 \
-    libsqlite3-dev
+    libsqlite3-dev \
+    libzip-dev \
+    && docker-php-ext-install pdo pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd zip
 
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Installer les extensions PHP
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
-
-# Copier le projet
-COPY . /var/www
+# Définir le dossier de travail
 WORKDIR /var/www
+
+# Copier les fichiers du projet
+COPY . .
 
 # Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Donner les droits corrects
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www/storage
+# Créer le fichier SQLite (s'il n'existe pas)
+RUN touch database/database.sqlite \
+    && chmod -R 775 storage bootstrap/cache database/database.sqlite
 
 # Générer la clé d'application
-RUN php artisan key:generate
+RUN php artisan config:clear \
+    && php artisan key:generate
 
-# Port par défaut utilisé par Laravel
+# Donner les bons droits
+RUN chown -R www-data:www-data /var/www
+
+# Exposer le port 8000
 EXPOSE 8000
 
+# Lancer le serveur Laravel
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
