@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <title>Connexion | ENVISTAT</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="{{ asset('build/assets/app-yT8C0jLf.css') }}">
+   <link rel="stylesheet" href="{{ asset('build/assets/app-DvB2Xm2x.css') }}">
+   <script src="{{ asset('build/assets/app-D2bd_e9Y.js') }}" defer></script>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-[#A8E6CF] text-gray-800 flex items-center justify-center h-screen px-4">
     <div class="w-full max-w-md space-y-6">
