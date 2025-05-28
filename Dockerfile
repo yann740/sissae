@@ -32,9 +32,10 @@ COPY .env /var/www/.env
 # Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Préparer les droits
+# Préparer les dossiers nécessaires et les droits
 RUN mkdir -p bootstrap/cache storage \
-    && chmod -R 775 bootstrap/cache storage \
+    storage/framework/cache storage/framework/sessions storage/framework/views storage/logs \
+    && chmod -R 775 storage bootstrap/cache \
     && chown -R www-data:www-data /var/www
 
 # Générer la clé d’application
