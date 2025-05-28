@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Connexion | ENVISTAT</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+   <link rel="stylesheet" href="{{ asset('build/assets/app-B-NJ9fjC.css') }}">
+   <script type="module" src="{{ asset('build/assets/app-Bf4POITK.js') }}"></script>
 </head>
 <body class="bg-[#A8E6CF] text-gray-800 flex items-center justify-center h-screen px-4">
     <div class="w-full max-w-md space-y-6">
