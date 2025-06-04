@@ -36,6 +36,10 @@ RUN npm install
 # Compiler les assets Vite
 RUN npm run build
 
+# Compiler les assets Vite
+RUN npm run build && ls -la public/build
+
+
 # Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
 
